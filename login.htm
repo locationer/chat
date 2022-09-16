@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.10.0/firebase-app.js";
+        import { getDatabase, ref, set, onValue, push, get, child} from "https://www.gstatic.com/firebasejs/9.10.0/firebase-database.js";
+       
+        const firebaseConfig = {
+          apiKey: "AIzaSyCLSrZi0FK0BYS17MR8NjVSF9hxIl-XXJI",
+          authDomain: "chating-test-1abe9.firebaseapp.com",
+          databaseURL: "https://chating-test-1abe9-default-rtdb.firebaseio.com",
+          projectId: "chating-test-1abe9",
+          storageBucket: "chating-test-1abe9.appspot.com",
+          messagingSenderId: "224195817800",
+          appId: "1:224195817800:web:be1ea02c848aae4830037d"
+        };
+      
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        enter.addEventListener('click', (e)=>{
+            location.href = "enter.htm";
+        })
+
+        submit.addEventListener('click', (e)=>{
+            addData();
+        })
+
+        password.addEventListener('keypress', (e)=>{
+            if(e.keyCode==13){
+                addData();
+            }
+        })
+
+        const addData = ()=>{
+            get(child(ref(database), '/'+document.getElementById('id').value+'/')).then((snapshot)=>{
+                if(snapshot.exists()==true && document.getElementById('id').value && document.getElementById('password').value == snapshot.val().password){
+                    location.href = "chat.htm"
+                }
+                else if(document.getElementById('id').value == ''){            
+                    alert('아이디를 입력하세요.')
+                }
+                else{
+                    alert('아이디 또는 비밀번호가 틀립니다.');
+                    document.getElementById('password').value = "";
+                }
+            });
+        }
+    </script>
+</head>
+<body class="container">
+    <input type="text" id="id" class="mt-1 form-control" placeholder="아이디">
+    <input type="password" id="password" class="mt-1 form-control" placeholder="비밀번호">
+    <button type="submit" id="submit" class="btn btn-primary mt-1 w-100">로그인</button>
+    <br>
+    <button type="submit" id="enter" class="btn btn-secondary mt-1">회원가입</button>
+    <button type="submit" id="password_lost" class="btn btn-danger mt-1">비밀번호를 잊어버렸나요?</button>
+</body>
+</html>
