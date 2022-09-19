@@ -39,8 +39,6 @@
               password: document.getElementById('password').value,
               content: document.getElementById('content').value
             })
-            document.getElementById('nickname').value = "";
-            document.getElementById('password').value = "";
             document.getElementById('content').value = "";
           }
           else if(document.getElementById('nickname').value == "" || document.getElementById('password').value == ""){
@@ -51,19 +49,9 @@
           }
         }
 
-        const text_delete = (e)=>{
-          var prompt = prompt("삭제하려면 사용한 비밀번호를 입력하세요.");
-          if(prompt==childSnapshot.val().password){
-            remove(ref(database, '/'+e.target.id));
-          }
-          else{
-            alert('비밀번호를 다시 입력하세요.');
-          }
-        }
-
         onValue(ref(database, '/'), (snapshot)=>{
           document.getElementById('chating').innerHTML="";
-          document.getElementById('nickname').focus();
+          document.getElementById('content').focus();
           snapshot.forEach((childSnapshot)=>{
 
             let div = document.createElement('div');
@@ -93,7 +81,15 @@
             btn.setAttribute('class', 'btn btn-danger float-end');
             document.getElementById('div2'+childSnapshot.key).appendChild(btn);
 
-            btn.addEventListener('click', text_delete);
+            btn.addEventListener('click', (e)=>{
+              var password = prompt('삭제하려면 사용한 비밀번호를 입력하세요.');
+                if(password==childSnapshot.val().password){
+                  remove(ref(database, '/'+e.target.id));
+                }
+                else{
+                  alert('비밀번호를 다시 입력하세요.');
+                }
+            });
           });
         });
       </script>
